@@ -127,10 +127,10 @@ local: locks.txt remote: locks.txt
 226 Transfer complete.
 418 bytes received in 00:00 (1.00 KiB/s)
 
-**Both files** task.txt and locks.txt downloaded!
+**Both files** task.txt and locks.txt downloaded! </pre>
         
      <p>Now, task.txt and you get the flag for Q3. And, save both of these files, they might be used later.</p>
-    </pre>
+    
       <h2>Step 3: Start Enumeration with FTP</h2>
         <pre>
      <p>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**
@@ -139,6 +139,7 @@ This question has two answers, as we can try to brute force the FTP server, it r
 Then the second one is SSH. And, yeah, you got it!
 Now, you are almost done the half of the room! BRAVO! You can become an elite hacker in the future, just carry on and be persistent.</p> 
         </pre>
+  
     <h2>Step 4: Brute Forcing SSH</h2>
     <pre>   
  <p> Do you know what is the users password?
@@ -152,19 +153,19 @@ What we have right now is:
 
 Now, to find the password of the users, you can use a password brute-forcer like Hydra. </p>
 
-Command: <pre> hydra -l lin -P locks.txt 10.10.253.164 ssh  </pre>
+Command: <p> hydra -l lin -P locks.txt 10.10.253.164 ssh  </p>
 
-Command Description: 
+<h4>Command Description:</h4> 
 
 Here's a breakdown of the command:
-
+<pre>
 - **`hydra`**: invokes the Hydra password-cracking tool
 - **-l `lin`**: specifies the username to use for the attack
 - **-P `locks.txt`**: specifies the file containing a list of passwords to try
 - **`10.10.253.164`**: specifies the IP address of the SSH server to attack
 - **`ssh`**: specifies the protocol to use for the attack (in this case, SSH)
-
-Now, hit that command! </p>
+</pre>
+<p>Now, hit that command! </p>
         <pre>
         ┌──(root㉿rex)-[/home/rexadmin/ctf]
       └─# hydra -l lin -P locks.txt 10.10.253.164 ssh
