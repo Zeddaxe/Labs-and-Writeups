@@ -124,11 +124,11 @@ local: locks.txt remote: locks.txt
 
 **Both files** task.txt and locks.txt downloaded!
         
-     <p>Now, cat these files and you get the flag for Q3. And, save these files, they might be used later.</p>
+     <p>Now, task.txt and you get the flag for Q3. And, save both of these files, they might be used later.</p>
+        <pre>
 
-      <h2>Step 3:</h2>
-        
-
+      <h2>Step 3: Start Enumeration with FTP</h2>/h2>
+        </pre>
      <p>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**
 
 This question has two answers, as we can try to brute force the FTP server, it responds with the wrong answer. 
@@ -136,24 +136,22 @@ This question has two answers, as we can try to brute force the FTP server, it r
 Then the second one is SSH. And, yeah, you got it!
 
 Now, you are almost done the half of the room! BRAVO! You can become an elite hacker in the future, just carry on and be persistent.</p> 
-    
+    <pre>
     <h2>Step 4: Brute Forcing SSH</h2>
-        <p>
-    Do you know what is the users password?
+    </pre>   
+        
+  <p> Do you know what is the users password?
 
 To find it you first have to consider the available credentials and if the doesn’t work, then you can  think further!
-
 What we have right now is: 
 
 - 3 open port
 - 1 task.txt file which contains a name that might be a user.
 - 1 locks.txt file which has a wordlist that might be the passwords.
 
-Now, to find the password of the users, you can use a password brute-forcer like Hydra. 
+Now, to find the password of the users, you can use a password brute-forcer like Hydra. </p>
 
-Command: <pre>
-        hydra -l lin -P locks.txt 10.10.253.164 ssh
-    </pre>
+Command: <pre> hydra -l lin -P locks.txt 10.10.253.164 ssh  </pre>
 
 Command Description: 
 
