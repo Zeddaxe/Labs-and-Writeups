@@ -1,5 +1,5 @@
 # Cyber-Security
-Welcome to the cybernetic world of advanced technology and science!
+Welcome to the modern internet-connected world where information security holds significant importance.
 
 This repository is dedicated to cybersecurity and ethical hacking. It is meant to be a comprehensive resource for those interested in learning about various topics within this field. The repository includes capture-the-flag (CTF) walkthroughs, write-ups, and methodologies. It also entails information on malware, programming, web development, scripting, and vulnerability exploitation. Sometimes, you may see the offensive vs defensive operations.
 
