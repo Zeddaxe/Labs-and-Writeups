@@ -76,9 +76,9 @@ enter the passphrase and you get your file.
 
     <h4>Encrypt a File</h4>
     <p>To encrypt a file using GPG, you'll need the recipient's public key. If you want to encrypt the file for yourself, you can use your own public key. Here's the command to encrypt a file:</p>
-    <pre><code>"gpg --encrypt --recipient [recipient_email_or_key_id] [file_to_encrypt]"
+    <pre><code> gpg --encrypt --recipient [recipient_email_or_key_id] [file_to_encrypt]
 </code></pre>
-    <p>Replace <code><recipient_email_or_key_id></code> with the email address or key ID of the recipient's public key. If encrypting for yourself, use your own email address or key ID. Replace <code><file_to_encrypt></code> with the path to the file you want to encrypt.</p>
+    <p>Replace <code>[recipient_email_or_key_id]</code> with the email address or key ID of the recipient's public key. If encrypting for yourself, use your own email address or key ID. Replace <code>[file_to_encrypt]</code> with the path to the file you want to encrypt.</p>
     <p>For example, to encrypt a file named <code>example.txt</code> for yourself:</p>
     <pre><code>gpg --encrypt --recipient you@example.com example.txt
 </code></pre>
@@ -88,7 +88,7 @@ enter the passphrase and you get your file.
     <p>To decrypt an encrypted file using GPG, you'll need the private key associated with the public key used for encryption. Here's the command to decrypt a file:</p>
     <pre><code>gpg --decrypt <encrypted_file.gpg>
 </code></pre>
-    <p>Replace <code><encrypted_file.gpg></code> with the path to the encrypted file you want to decrypt.</p>
+    <p>Replace <code>[encrypted_file.gpg]</code> with the path to the encrypted file you want to decrypt.</p>
     <p>For example, to decrypt the encrypted file <code>example.txt.gpg</code>:</p>
     <pre><code>gpg --decrypt example.txt.gpg
 </code></pre>
@@ -96,7 +96,7 @@ enter the passphrase and you get your file.
 
     <h4>Additional Tips:</h4>
     <ul>
-        <li>Use <code>-output <output_file></code> option to specify the output file when encrypting or decrypting to avoid overwriting the original file.</li>
+        <li>Use <code>-output [output_file]</code> option to specify the output file when encrypting or decrypting to avoid overwriting the original file.</li>
         <li>Ensure you keep your private key secure and do not share it with others.</li>
         <li>Share your public key with trusted parties for them to encrypt files that only you can decrypt.</li>
     </ul>
@@ -104,5 +104,18 @@ enter the passphrase and you get your file.
     <p>But, what if you do not have the passphrase? Then, as a hacker, you can have an option to crack the passphrase using Brute Force with John The Ripper.</p>
 
     <h2>Cracking GPG Passphrase</h2>
+    <code>gpg2john file.txt.gpg > hash
+
+then, 
+
+john --wordlist=rockyou.txt --format=gpg hash</code>
+    <h2>Private Data Encryption Tools</h2>
+<p> <h2>Private Data Encryption</h2>
+
+- 3GB free - https://nordlocker.com/plans/?pricing_variant=personal
+- https://cryptomator.org/
+- Google Drive Plugin - https://www.orangedox.com/
+- Part Data encryptor -https://www.confidencial.io/</p>
+    
 </body>
 </html>
