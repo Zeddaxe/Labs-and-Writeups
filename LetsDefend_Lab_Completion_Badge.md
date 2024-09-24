@@ -1,5 +1,5 @@
 ---
-title: Lab Completion Badge
+Lab Completion Badge
 ---
 
 # Click the button below to see the Badge!
