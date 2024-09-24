@@ -9,27 +9,27 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 20px;
-            background-color: #121212; /* Change to black */
-            color: #ffffff; /* Change text color to white */
+            background-color: #121212; 
+            color: #ffffff; 
         }
         h1, h2, h3 {
-            color: #ffffff; /* Ensure headers are white */
+            color: #ffffff; 
         }
         pre {
-            background-color: #333333; /* Darker background for code blocks */
+            background-color: #333333; 
             padding: 10px;
-            border: 1px solid #444444; /* Darker border */
+            border: 1px solid #444444; 
             overflow-x: auto;
         }
         code {
             font-family: Consolas, "Courier New", monospace;
-            background-color: #333333; /* Darker background for inline code */
+            background-color: #333333;
             padding: 2px 4px;
             border-radius: 4px;
-            color: #ffffff; /* Ensure inline code text is white */
+            color: #ffffff; 
         }
         a {
-            color: #1a73e8; /* Change link color to a shade of blue */
+            color: #1a73e8; 
         }
     </style>
 </head>
@@ -76,7 +76,7 @@ enter the passphrase and you get your file.
 
     <h4>Encrypt a File</h4>
     <p>To encrypt a file using GPG, you'll need the recipient's public key. If you want to encrypt the file for yourself, you can use your own public key. Here's the command to encrypt a file:</p>
-    <pre><code>gpg --encrypt --recipient <recipient_email_or_key_id> <file_to_encrypt>
+    <pre><code>"gpg --encrypt --recipient [recipient_email_or_key_id] [file_to_encrypt]"
 </code></pre>
     <p>Replace <code><recipient_email_or_key_id></code> with the email address or key ID of the recipient's public key. If encrypting for yourself, use your own email address or key ID. Replace <code><file_to_encrypt></code> with the path to the file you want to encrypt.</p>
     <p>For example, to encrypt a file named <code>example.txt</code> for yourself:</p>
