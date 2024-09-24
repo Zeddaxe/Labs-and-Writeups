@@ -65,7 +65,9 @@ I welcome contributions! If you have suggestions for improvement or would like t
 
 ## 📫 Contact
 
-You can reach me via [LinkedIn]([https://www.linkedin.com/in/himanshusec/]).
+You can reach me via 
+[LinkedIn](https://www.linkedin.com/in/himanshusec/).
+
 
 ---
 
