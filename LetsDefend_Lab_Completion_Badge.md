@@ -1,6 +1,8 @@
 ---
-Lab Completion Badge
+layout: default
+title: Lab Completion Badge
 ---
+
 
 # Click the button below to see the Badge!
 
